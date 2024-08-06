@@ -27,7 +27,7 @@ jobs:
 
     - name: Build with Nuitka
       run: |
-        python -m nuitka --show-progress --standalone --enable-plugin=pyside6 --plugin-enable=numpy --enable-plugin=tensorflow --enable-plugin=matplotlib --windows-icon=gui/icons/sherloq_alpha.png --output-dir=build gui/sherloq.py
+        python -m nuitka --show-progress --standalone --enable-plugin=pyside6 --plugin-enable=numpy --enable-plugin=tensorflow --enable-plugin=matplotlib --windows-icon-from-ico=gui/icons/sherloq_alpha.png --output-dir=build gui/sherloq.py
 
     - name: Copy necessary files to build directory
       run: |
