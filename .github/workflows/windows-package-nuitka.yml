@@ -23,11 +23,11 @@ jobs:
     - name: Install Dependencies
       run: |
         pip install -U pip
-        pip install nuitka
+        python -m pip install -U --force-reinstall "https://github.com/Nuitka/Nuitka/archive/factory.zip"
 
     - name: Build with Nuitka
       run: |
-        python -m nuitka --mingw64 --standalone --onefile --windows-icon=gui/icons/sherloq_alpha.png --output-dir=build sherloq.py
+        python -m nuitka --show-progress --standalone --enable-plugin=pyside6 --plugin-enable=numpy --enable-plugin=tensorflow --enable-plugin=matplotlib --windows-icon=gui/icons/sherloq_alpha.png --output-dir=build gui/sherloq.py
 
     - name: Copy necessary files to build directory
       run: |
