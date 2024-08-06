@@ -41,13 +41,12 @@ jobs:
       run: |
         Compress-Archive -Path build\* -DestinationPath sherloq-package.zip
 
-    - name: Setup Inno Setup Compiler
-      uses: crazy-max/ghaction-inno-setup@v3
-
     - name: Compile Inno Setup Script
-      run: |
-        ISCC.exe /DMyAppVersion=1.0.0 /DMyAppIcon=gui/icons/sherloq_alpha.png sherloq_installer_script.iss
-
+      uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+      with:
+        path: sherloq_installer_script.iss
+        options: /DMyAppIcon=gui/icons/sherloq_alpha.png 
+          
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with:
