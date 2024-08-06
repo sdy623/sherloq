@@ -1,0 +1,56 @@
+name: Windows Build and Inno Setup
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-package:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: |
+        pip install -U pip
+        pip install nuitka
+
+    - name: Build with Nuitka
+      run: |
+        python -m nuitka --mingw64 --standalone --onefile --windows-icon=gui/icons/sherloq_alpha.png --output-dir=build sherloq.py
+
+    - name: Copy necessary files to build directory
+      run: |
+        xcopy /s /y icons build\
+        xcopy /s /y ssimulacra build\
+        xcopy /s /y noiseprint build\
+        xcopy /s /y pyexiftool build\
+        xcopy /s /y butteraugli build\
+
+    - name: Package into Zip
+      run: |
+        Compress-Archive -Path build\* -DestinationPath sherloq-package.zip
+
+    - name: Setup Inno Setup Compiler
+      uses: crazy-max/ghaction-inno-setup@v3
+
+    - name: Compile Inno Setup Script
+      run: |
+        ISCC.exe /DMyAppVersion=1.0.0 /DMyAppIcon=gui/icons/sherloq_alpha.png sherloq_installer_script.iss
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: sherloq-package
+        path: sherloq-package.zip
+        retention-days: 1
